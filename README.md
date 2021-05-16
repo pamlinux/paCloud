@@ -19,4 +19,4 @@
 
 
 ## Licence
-Please see license.txt. 
+Please see LICENSE. 
