@@ -6,6 +6,6 @@ app = FastAPI()
 
 
 @app.get("/items/")
-async def read_items(q: Optional[List[str]] = Query(None)):
+async def read_items(q: List[str] = Query(["foo", "bar"])):
     query_items = {"q": q}
     return query_items
