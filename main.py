@@ -6,14 +6,7 @@ app = FastAPI()
 
 
 @app.get("/items/")
-async def read_items(
-    q: Optional[str] = Query(
-        None,
-        title="Query string",
-        description="Query string for the items to search in the database that have a good match",
-        min_length=3,
-    )
-):
+async def read_items(q: Optional[str] = Query(None, alias="item-query")):
     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
     if q:
         results.update({"q": q})
