@@ -1,22 +1,29 @@
-"""
-Bodies of arbitrary dicts with dict :
-
-{
-    "1" : 1,
-    "2" : 2,
-    "3" : 3
-}
-"""
-
-from typing import Dict
+from typing import Optional
 
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
 
-@app.post("/index-weights/")
-async def create_index_weights(weights: Dict[int, float]):
-    for key in weights:
-        print(type(key))
-    return weights
+class Item(BaseModel):
+    name: str
+    description: Optional[str] = None
+    price: float
+    tax: Optional[float] = None
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "Foo",
+                "description": "A very nice Item",
+                "price": 35.4,
+                "tax": 3.2,
+            }
+        }
+
+
+@app.put("/items/{item_id}")
+async def update_item(item_id: int, item: Item):
+    results = {"item_id": item_id, "item": item}
+    return results
