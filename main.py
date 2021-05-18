@@ -26,6 +26,16 @@ with the following body example :
             "tags": [
                 "bar",
                 "classic"
+            ],
+            "images" : [
+                {
+                    "url": "http://example.com/baz.jpg",
+                    "name": "The Foo live"
+                },
+                {
+                    "url": "http://example.com/dave.jpg",
+                    "name": "The Baz"
+                }
             ]
         }
     ]
@@ -65,4 +75,5 @@ class Offer(BaseModel):
 
 @app.post("/offers/")
 async def create_offer(offer: Offer):
-    return offer
+    results = {"offer" : offer, "Total price" : offer.price + offer.items[0].tax + offer.items[1].tax}
+    return results
