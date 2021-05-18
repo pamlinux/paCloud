@@ -1,3 +1,39 @@
+"""
+Deeply nested models
+
+with the following body example :
+
+{
+    "name": "Foo",
+    "description": "Canal+",
+    "price": 84.0,
+    "items": [
+        {
+            "name": "Canal enfants",
+            "description": "Pour les enfants",
+            "price": 40.0,
+            "tax": 3.2,
+            "tags": [
+                "bar",
+                "rock"
+            ]
+        },
+        {
+            "name": "Canal rose",
+            "description": "Pour les adultes",
+            "price": 44.0,
+            "tax": 3.2,
+            "tags": [
+                "bar",
+                "classic"
+            ]
+        }
+    ]
+}
+
+
+"""
+
 from typing import List, Optional, Set
 
 from fastapi import FastAPI
@@ -16,11 +52,17 @@ class Item(BaseModel):
     description: Optional[str] = None
     price: float
     tax: Optional[float] = None
-    tags: Set[str] = []
+    tags: Set[str] = set()
     images: Optional[List[Image]] = None
 
 
-@app.put("/items/{item_id}")
-async def update_item(item_id: int, item: Item):
-    results = {"item_id": item_id, "item": item}
-    return results
+class Offer(BaseModel):
+    name: str
+    description: Optional[str] = None
+    price: float
+    items: List[Item]
+
+
+@app.post("/offers/")
+async def create_offer(offer: Offer):
+    return offer
