@@ -1,19 +1,32 @@
-from typing import List, Optional
+"""
+{
+  "username": "pamlinux",
+  "password": "ejfbwejhfgbejgb",
+  "email": "user@example.com",
+  "full_name": "Pierre-Alain Moret"
+}
+"""
+from typing import Optional
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 app = FastAPI()
 
 
-class Item(BaseModel):
-    name: str
-    description: Optional[str] = None
-    price: float
-    tax: Optional[float] = None
-    tags: List[str] = []
+class UserIn(BaseModel):
+    username: str
+    password: str
+    email: EmailStr
+    full_name: Optional[str] = None
 
 
-@app.post("/items/", response_model=Item)
-async def create_item(item: Item):
-    return item
+class UserOut(BaseModel):
+    username: str
+    email: EmailStr
+    full_name: Optional[str] = None
+
+
+@app.post("/user/", response_model=UserOut)
+async def create_user(user: UserIn):
+    return user
