@@ -14,16 +14,11 @@ class Item(BaseModel):
     tags: Set[str] = []
 
 
-@app.post("/items/", response_model=Item, tags=["items"])
+@app.post(
+    "/items/",
+    response_model=Item,
+    summary="Create an item",
+    description="Create an item with all the information, name, description, price, tax and a set of unique tags",
+)
 async def create_item(item: Item):
     return item
-
-
-@app.get("/items/", tags=["items"])
-async def read_items():
-    return [{"name": "Foo", "price": 42}]
-
-
-@app.get("/users/", tags=["users"])
-async def read_users():
-    return [{"username": "johndoe"}]
