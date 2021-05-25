@@ -1,26 +1,34 @@
-from typing import Optional
+from fastapi import FastAPI
 
-from fastapi import BackgroundTasks, Depends, FastAPI
+tags_metadata = [
+    {
+        "name": "users",
+        "description": "Operations with users. The **login** logic is also here.",
+    },
+    {
+        "name": "items",
+        "description": "Manage items. So _fancy_ they have their own docs.",
+        "externalDocs": {
+            "description": "Items external docs",
+            "url": "https://fastapi.tiangolo.com/",
+        },
+    },
+]
 
-app = FastAPI()
+app = FastAPI(
+    openapi_tags=tags_metadata,
+    title="My Super Project",
+    description="This is a very fancy project, with auto docs for the API and everything",
+    version="2.5.0",
+)
 
 
-def write_log(message: str):
-    with open("log.txt", mode="a") as log:
-        log.write(message)
+
+@app.get("/users/", tags=["users"])
+async def get_users():
+    return [{"name": "Harry"}, {"name": "Ron"}]
 
 
-def get_query(background_tasks: BackgroundTasks, q: Optional[str] = None):
-    if q:
-        message = f"found query: {q}\n"
-        background_tasks.add_task(write_log, message)
-    return q
-
-
-@app.post("/send-notification/{email}")
-async def send_notification(
-    email: str, background_tasks: BackgroundTasks, q: str = Depends(get_query)
-):
-    message = f"message to {email}\n"
-    background_tasks.add_task(write_log, message)
-    return {"message": "Message sent"}
+@app.get("/items/", tags=["items"])
+async def get_items():
+    return [{"name": "wand"}, {"name": "flying broom"}]
